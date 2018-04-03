@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <CookieMessage />
     <img src="./assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>
@@ -7,11 +8,13 @@
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import CookieMessage from './components/CookieMessage.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    HelloWorld,
+    CookieMessage
   }
 }
 </script>
