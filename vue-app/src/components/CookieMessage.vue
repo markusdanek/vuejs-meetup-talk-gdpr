@@ -5,13 +5,11 @@
         {{ message }}
       </slot>
     </div>
-    <div class="cookie__buttons">
-      <a :href="buttonLink" v-if="buttonLink" :class="buttonClass">
-        {{ buttonLinkText }}
-      </a>
-      <div :class="buttonClass" @click="accept">
-        {{ buttonText }}
-      </div>
+    <div :class="buttonClassAccept" @click="accept">
+      {{ buttonTextAccept }}
+    </div>
+    <div :class="buttonClassDeny" @click="deny">
+      {{ buttonTextDeny }}
     </div>
   </div>
 </template>
@@ -20,16 +18,13 @@
   export default {
     name: 'CookieMessage',
     props: {
-      buttonText: {
+      buttonTextAccept: {
         type: String,
         default: 'Accept'
       },
-      buttonLink: {
-        type: String
-      },
-      buttonLinkText: {
+      buttonTextDeny: {
         type: String,
-        default: 'More info'
+        default: 'Deny'
       },
       message: {
         type: String,
@@ -39,9 +34,13 @@
         type: String,
         default: 'top'
       },
-      buttonClass: {
+      buttonClassAccept: {
         type: String,
-        default: 'cookie__button'
+        default: 'cookie__button-accept'
+      },
+      buttonClassDeny: {
+        type: String,
+        default: 'cookie__button-deny'
       }
     },
     data() {
@@ -61,15 +60,23 @@
     },
     methods: {
       setGDPR() {
-        localStorage.setItem('cookie:accepted', true);
+        localStorage.setItem('GDPR:cookie', true);
+      },
+      unsetGDPR() {
+        localStorage.setItem('GDPR:cookie', false);
       },
       getGDPR() {
-        return localStorage.getItem('cookie:accepted');
+        return localStorage.getItem('GDPR:cookie');
       },
       accept() {
         this.setGDPR();
         this.isOpen = false;
         this.$emit('accept');
+      },
+      deny() {
+        this.unsetGDPR();
+        this.isOpen = false;
+        this.$emit('deny');
       }
     }
   }
@@ -78,28 +85,27 @@
 <style>
   .cookie {
     position: fixed;
-    overflow: hidden;
-    box-sizing: border-box;
-    z-index: 9999;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 12px;
+    padding: 10px;
     background: #F2F2F2;
-    padding: 20px;
   }
-  .cookie__buttons {
-    display: flex;
-    flex-direction: column;
+
+  .cookie__content {
+    grid-column: auto / span 3;
+    padding: 5px;
   }
-  .cookie__button {
-    cursor: pointer;
-    align-self: center;
+
+  .cookie__button-accept,
+  .cookie__button-deny {
+    grid-column: auto / span 1;
     padding: 5px;
     background: #42B983;
     color: #FFFFFF;
   }
+
+  /* Positions */
   .cookie--top {
     top: 0;
     left: 0;
