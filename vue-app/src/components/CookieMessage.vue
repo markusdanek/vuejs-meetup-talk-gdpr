@@ -5,10 +5,10 @@
         {{ message }}
       </slot>
     </div>
-    <div :class="buttonClassAccept" @click="accept">
+    <div class="cookie__button accept" @click="accept">
       {{ buttonTextAccept }}
     </div>
-    <div :class="buttonClassDeny" @click="deny">
+    <div class="cookie__button deny" @click="deny">
       {{ buttonTextDeny }}
     </div>
   </div>
@@ -28,20 +28,16 @@
       },
       message: {
         type: String,
-        default: 'This website uses cookies to ensure you get the best experience on our website.'
+        default: 'We use cookies to personalise content and ads, to provide social \
+        media features and to analyse our traffic. We also share information about \
+        your use of our site with our social media, advertising and analytics partners \
+        who may combine it with other information you’ve provided to them or they’ve \
+        collected from your use of their services.'
       },
       position: {
         type: String,
         default: 'top'
       },
-      buttonClassAccept: {
-        type: String,
-        default: 'cookie__button-accept'
-      },
-      buttonClassDeny: {
-        type: String,
-        default: 'cookie__button-deny'
-      }
     },
     data() {
       return {
@@ -59,24 +55,16 @@
       }
     },
     methods: {
-      setGDPR() {
-        localStorage.setItem('GDPR:cookie', true);
-      },
-      unsetGDPR() {
-        localStorage.setItem('GDPR:cookie', false);
-      },
       getGDPR() {
-        return localStorage.getItem('GDPR:cookie');
+        return localStorage.getItem('GDPR:accepted', true);
       },
       accept() {
-        this.setGDPR();
         this.isOpen = false;
-        this.$emit('accept');
+        localStorage.setItem('GDPR:accepted', true);
       },
       deny() {
-        this.unsetGDPR();
         this.isOpen = false;
-        this.$emit('deny');
+        localStorage.setItem('GDPR:accepted', false);
       }
     }
   }
@@ -86,26 +74,45 @@
   .cookie {
     position: fixed;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-gap: 12px;
     padding: 10px;
     background: #F2F2F2;
   }
 
   .cookie__content {
-    grid-column: auto / span 3;
+    grid-column: auto / span 5;
     padding: 5px;
+    text-align: left;
   }
 
-  .cookie__button-accept,
-  .cookie__button-deny {
+  .cookie__button {
+    margin: 15px 0;
     grid-column: auto / span 1;
+  }
+
+  .cookie__button.accept {
     padding: 5px;
     background: #42B983;
     color: #FFFFFF;
+    cursor: pointer;
   }
 
-  /* Positions */
+  .cookie__button.accept:hover {
+    background: #42B955;
+  }
+
+  .cookie__button.deny {
+    padding: 5px;
+    background: #42B983;
+    color: #FFFFFF;
+    cursor: pointer;
+  }
+
+  .cookie__button.deny:hover {
+    background: #42B955;
+  }
+
   .cookie--top {
     top: 0;
     left: 0;
